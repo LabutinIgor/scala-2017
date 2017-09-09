@@ -1,7 +1,6 @@
 package ru.spbau.jvm.scala.task01_calculator.expressions
 
 class Brackets(val expr: Expression) extends Expression {
-  override val name = "brackets"
 
   override def eval(): Double = {
     apply(List(expr.eval()))
