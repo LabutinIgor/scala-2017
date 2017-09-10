@@ -22,4 +22,13 @@ class ParserSpec extends UnitSpec {
     assert(expression.isInstanceOf[BinaryMul])
     expression.eval() shouldEqual -4
   }
+
+  "A Parser" should "throw IllegalArgumentException if expression is incorrect" in {
+    val lexemes = List(
+      new Lexeme(LexemeType.UnOp, "-"), new Lexeme(LexemeType.Const, "2"),
+      new Lexeme(LexemeType.BinOp, "*"))
+    assertThrows[IllegalArgumentException] {
+      Parser.parse(lexemes)
+    }
+  }
 }
