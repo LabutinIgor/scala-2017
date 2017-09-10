@@ -8,8 +8,13 @@ object Main {
     for (line <- io.Source.stdin.getLines) {
       if (line.equals("exit")) System.exit(0)
 
-      val expression = Parser.parse(Lexer.parse(line))
-      println(expression.eval())
+      try {
+        val expression = Parser.parse(Lexer.parse(line))
+        println(expression.eval())
+      } catch {
+        case _: IllegalArgumentException => println("Incorrect expression")
+        case _: Throwable => println("Something went wrong")
+      }
     }
   }
 }
