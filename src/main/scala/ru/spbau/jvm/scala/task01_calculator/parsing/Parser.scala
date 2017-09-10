@@ -8,6 +8,7 @@ import ru.spbau.jvm.scala.task01_calculator.expressions.{Brackets, ConstExpressi
 object Parser {
   def parse(lexemes: List[Lexeme]): Expression = {
     val pos = findPosOfFirstOperation(lexemes)
+    if (pos == -1) throw new IllegalArgumentException
     lexemes(pos) match {
       case l if l.lexemeType == LexemeType.BinOp && l.lexemeValue.equals("+") =>
         new BinaryPlus(parse(lexemes.slice(0, pos)), parse(lexemes.slice(pos + 1, lexemes.size)))
@@ -19,22 +20,22 @@ object Parser {
         new BinaryDiv(parse(lexemes.slice(0, pos)), parse(lexemes.slice(pos + 1, lexemes.size)))
       case l if l.lexemeType == LexemeType.UnOp && l.lexemeValue.equals("-") =>
         new UnaryMinus(parse(lexemes.tail))
-      case l if l.lexemeType == LexemeType.Const =>
+      case l if l.lexemeType == LexemeType.Const && lexemes.length == 1 =>
         new ConstExpression(lexemes(pos).lexemeValue.toDouble)
       case l if l.lexemeType == LexemeType.Bracket =>
         if (lexemes.head.lexemeValue.equals("(") && lexemes.last.lexemeValue.equals(")")) {
           new Brackets(parse(lexemes.slice(1, lexemes.size - 1)))
         } else {
-          throw new IllegalArgumentException()
+          throw new IllegalArgumentException
         }
       case l if l.lexemeType == LexemeType.FunctionName =>
         val args = parseFunctionArgs(lexemes.slice(2, lexemes.size - 1) :+ new Lexeme(LexemeType.Comma, ","))
         l.lexemeValue match {
           case "sin" => new SinFunction(args)
           case "pow" => new PowFunction(args)
-          case _ => throw new NoSuchElementException
+          case _ => throw new IllegalArgumentException
         }
-      case _ => throw new NoSuchElementException
+      case _ => throw new IllegalArgumentException
     }
   }
 
