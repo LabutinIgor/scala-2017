@@ -47,6 +47,10 @@ class MultiSet[T](private val elementsMap: mutable.Map[T, Int] = mutable.Map.emp
     elementsMap.get(x).map(_ => x)
   }
 
+  def foreach(func: T => Unit): Unit = {
+    elementsMap.foreach({ case (x, cnt) => (1 to cnt).foreach(_ => func(x)) })
+  }
+
   def &(multiSet: MultiSet[T]): MultiSet[T] = {
     new MultiSet[T](elementsMap.map({ case (x, cnt) => (x, math.min(cnt, multiSet.elementsMap.getOrElse(x, 0))) })
       .filter({ case (x, cnt) => cnt > 0 }))
