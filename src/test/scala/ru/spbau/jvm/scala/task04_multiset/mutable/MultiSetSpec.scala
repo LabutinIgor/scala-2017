@@ -48,6 +48,15 @@ class MultiSetSpec extends UnitSpec {
     mappedMultiSet("4") shouldEqual 2
   }
 
+  it should "flatMap" in {
+    val multiSet: MultiSet[Int] = MultiSet(1, 2, 4, 4).flatMap(x => Seq(x, 2 * x))
+    multiSet(1) shouldEqual 1
+    multiSet(2) shouldEqual 2
+    multiSet(3) shouldEqual 0
+    multiSet(4) shouldEqual 3
+    multiSet(8) shouldEqual 2
+  }
+
   it should "be iterated by for" in {
     val multiSet: MultiSet[Int] = MultiSet(1, 2, 4, 4)
     var cnt = 0
@@ -82,12 +91,12 @@ class MultiSetSpec extends UnitSpec {
   it should "unite sets" in {
     val multiSet1 = MultiSet(1, 6, 1, 2, 4)
     val multiSet2 = MultiSet(1, 1, 1, 3, 5, 6)
-    val andMultiset = multiSet1 | multiSet2
-    andMultiset(1) shouldEqual 5
-    andMultiset(2) shouldEqual 1
-    andMultiset(3) shouldEqual 1
-    andMultiset(4) shouldEqual 1
-    andMultiset(5) shouldEqual 1
-    andMultiset(6) shouldEqual 2
+    val orMultiset = multiSet1 | multiSet2
+    orMultiset(1) shouldEqual 5
+    orMultiset(2) shouldEqual 1
+    orMultiset(3) shouldEqual 1
+    orMultiset(4) shouldEqual 1
+    orMultiset(5) shouldEqual 1
+    orMultiset(6) shouldEqual 2
   }
 }

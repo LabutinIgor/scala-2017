@@ -36,7 +36,11 @@ class MultiSet[T](private val elementsMap: mutable.Map[T, Int] = mutable.Map.emp
   }
 
   def flatMap[B](func: T => Seq[B]): MultiSet[B] = {
-    new MultiSet[B](elementsMap.flatMap({ case (x, cnt) => func(x).map(y => (y, cnt)) }))
+    val resElementsMap: mutable.Map[B, Int] = mutable.Map.empty
+    elementsMap.foreach({
+      case (x, cnt) => func(x).foreach(y => resElementsMap.update(y, resElementsMap.getOrElse(y, 0) + cnt))
+    })
+    new MultiSet[B](resElementsMap)
   }
 
   def apply(x: T): Int = {
